@@ -47,7 +47,7 @@ def login():
 
             user = UserProfile.query.filter_by(username=username).first()
 
-             if user is not None and check_password_hash(user.password, password):
+            if user is not None and check_password_hash(user.password, password):
 
                 # get user id, load into session
                 login_user(user)
@@ -56,7 +56,7 @@ def login():
                 flash('Logged in successfully.', 'success')
                 return redirect(url_for('secure_page'))
             else:
-                flash('Invalid Username/Password.') 
+                flash('Invalid Username/Password.','danger') 
                 return redirect(url_for("home"))  
                 # they should be redirected to a secure-page route instead
     return render_template("login.html", form=form)
@@ -66,6 +66,16 @@ def login():
 def secure_page():
 
     return render_template('secure_page.html')
+
+@app.route("/logout/")
+@login_required
+def logout():
+
+    logout_user()
+
+    flash('User logged out.', 'danger')
+
+    return redirect(url_for('home'))
 
 # user_loader callback. This callback is used to reload the user object from
 # the user ID stored in the session
